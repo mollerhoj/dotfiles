@@ -1,6 +1,15 @@
 [submodule "/Users/mollerhoj3/dotfiles/vim/bundle/vim-fugitive"]
 	path = /Users/mollerhoj3/dotfiles/vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule "/Users/mollerhoj3/dotfiles/vim/bundle/FuzzyFinder"]
-	path = /Users/mollerhoj3/dotfiles/vim/bundle/FuzzyFinder
-	url = https://github.com/vim-scripts/FuzzyFinder.git
+[submodule "/Users/mollerhoj3/dotfiles/vim/bundle/vimux"]
+	path = /Users/mollerhoj3/dotfiles/vim/bundle/vimux
+	url = https://github.com/benmills/vimux.git
+[submodule "/Users/mollerhoj3/dotfiles/vim/bundle/L9"]
+	path = /Users/mollerhoj3/dotfiles/vim/bundle/L9
+	url = https://github.com/vim-scripts/L9.git
+[submodule "/Users/mollerhoj3/dotfiles/vim/bundle/vim-gitgutter"]
+	path = /Users/mollerhoj3/dotfiles/vim/bundle/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter.git
+[submodule "/Users/mollerhoj3/dotfiles/vim/bundle/Command-T"]
+	path = /Users/mollerhoj3/dotfiles/vim/bundle/Command-T
+	url = https://github.com/wincent/Command-T.git

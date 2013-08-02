@@ -4,11 +4,11 @@
 [core]
 	excludesfile = /Users/mollerhoj3/.gitignore
 [merge]
-	tool = vimdiff
+	tool = vim
 [credential]
-  helper = osxkeychain
+	helper = osxkeychain
 [alias]
-  lol = log --graph --decorate --pretty=oneline --abbrev-commit --all --max-count=10
+  lol = "!git --no-pager log --graph --decorate --pretty=oneline --abbrev-commit --all --max-count=10"
   lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
   loldiff = log --graph --decorate --pretty=oneline --abbrev-commit HEAD ^master
   df = diff HEAD master
@@ -32,3 +32,6 @@
   changed = green
   untracked = cyan
 
+[push]
+	defaut = simple
+	default = simple
