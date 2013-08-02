@@ -1,16 +1,83 @@
-# Customize to your needs...
+autoload -U colors
+colors
+
+setopt prompt_subst
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' stagedstr '%{\e[0;33m%}'
+zstyle ':vcs_info:*' unstagedstr '%{\e[0;31m%}'
+
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats "%{\e[0;32m%}%u%c%b%a%m%{\e[0m%}"
+
+# or use pre_cmd, see man zshcontrib
+vcs_info_wrapper() {
+  vcs_info
+  if [ -n "$vcs_info_msg_0_" ]; then
+    echo "%{$fg[grey]%}${vcs_info_msg_0_}%{$reset_color%}$del"
+  fi
+}
+PROMPT=$'$(vcs_info_wrapper) %{\e[0;32m%}%~ %{\e[0m%}'
+ 
+
+# # Colors
+# autoload -U colors
+# colors
+# setopt prompt_subst
+# 
+# # Prompt
+# PROMPT='%~ $'
+
+# Colorize terminal
+export TERM='xterm-color'
+alias ls='ls -G'
+alias ll='ls -lG'
+export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
+export GREP_OPTIONS="--color"
+
+# Nicer history
+export HISTSIZE=100000
+export HISTFILE="$HOME/.history"
+export SAVEHIST=$HISTSIZE
+
+# Use vim as the editor
+export EDITOR=vi
+
+# GNU Screen sets -o vi if EDITOR=vi, so we have to force it back.
+set -o emacs
+
+# Use C-x C-e to edit the current command line
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
+
+# By default, zsh considers many characters part of a word (e.g., _ and -).
+# Narrow that down to allow easier skipping through words via M-f and M-b.
+export WORDCHARS='*?[]~&;!$%^<>'
+
+# Highlight search results in ack.
+export ACK_COLOR_MATCH='red'
+
+# Paths
 export PATH=/Developer/NVIDIA/CUDA-5.0/bin:$PATH
 export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/local/bin:$PATH"
 export PATH="/opt/local/sbin:$PATH"
+export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+export PATH="$PATH:$HOME/.rvm/bin"
 
-alias vim='/Applications/MacVim.app/Contents/MacOS/Vim'
-alias vi='/Applications/MacVim.app/Contents/MacOS/Vim'
+export PKG_CONFIG_PATH="/opt/ImageMagick/lib/pkgconfig/:$PKG_CONFIG_PATH"
 
-#To remove font-changes in iterm2, open terminal and run:
-#defaults write com.googlecode.iterm2 PinchToChangeFontSizeDisabled -bool true
+
+# fixes rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+
+# Vim version
+alias vim='mvim -v'
+alias vi='mvim -v'
 
 # MANUAL READER: Browser
 export MANPAGER='col -b |bcat'
@@ -25,7 +92,7 @@ export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 
 bindkey -M vicmd ' ' clear-screen
-bindkey '^[[Z' reverse-menu-complete
+# bindkey '^[[Z' reverse-menu-complete
 
 # Define widget w to run command. Like vim save.
 function w() {accept-line}
@@ -35,44 +102,12 @@ zle -N w
 function q() {edit-command-line}
 zle -N q
 
-#######################################################
+setopt correct
 
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
+bindkey '^[[Z' backward-kill-word
+bindkey -M vicmd '?' history-incremental-pattern-search-backward
+bindkey -M vicmd '/' history-incremental-search-backward
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="my-theme"
 
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable bi-weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git my-vi-mode osx)
-
-source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
