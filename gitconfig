@@ -33,5 +33,5 @@
   untracked = cyan
 
 [push]
-	defaut = simple
-	default = simple
+	defaut = upstream
+	default = upstream

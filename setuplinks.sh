@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
-ln -s vimrc ../.vimrc
-ln -s zshrc ../.zshrc
-ln -s vim ../.vim
-ln -s vim-tmp ../.vim-tmp
-ln -s vim-tmp-to-die ../.vim-tmp-to-die
-ln -s gitignore ../.gitignore
-ln -s gitconfig ../.gitconfig
-ln -s tmux.conf ../.tmux.conf
+cd ..
+ln -s -f dotfiles/vimrc .vimrc
+ln -s -f dotfiles/zshrc .zshrc
+ln -s -f dotfiles/vim .vim
+ln -s -f dotfiles/vim-tmp .vim-tmp
+ln -s -f dotfiles/vim-tmp-to-die .vim-tmp-to-die
+ln -s -f dotfiles/gitignore .gitignore
+ln -s -f dotfiles/gitconfig .gitconfig
+ln -s -f dotfiles/tmux.conf .tmux.conf

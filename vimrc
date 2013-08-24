@@ -18,7 +18,6 @@ set shiftwidth=2
 set softtabstop=2
 set autoindent
 set laststatus=2
-set showmatch
 set incsearch
 set hlsearch
 " make searches case-sensitive only if they contain upper-case characters
@@ -80,9 +79,6 @@ augroup vimrcEx
 
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
   autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
-
-  " Indent p tags
-  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
 
   " Don't syntax highlight markdown because it's often wrong
   autocmd! FileType mkd setlocal syn=off
@@ -233,7 +229,6 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
   " Requires 'scratch' plugin
   :topleft 100 :split __Routes__
@@ -250,19 +245,20 @@ function! ShowRoutes()
   " Delete empty trailing line
   :normal dd
 endfunction
-"map <leader>gR :call ShowRoutes()<cr>
-"map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
-"map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
-"map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
-"map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
-"map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
-"map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
-"map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets<cr>
-"map <leader>gf :CommandTFlush<cr>\|:CommandT features<cr>
-"map <leader>gg :topleft 100 :split Gemfile<cr>
-"map <leader>gt :CommandTFlush<cr>\|:CommandTTag<cr>
-""map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
-""map <leader>F :CommandTFlush<cr>\|:CommandT %%<cr>
+map <leader>gR :call ShowRoutes()<cr>
+map <leader>gr :topleft :split config/routes.rb<cr>
+map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
+map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
+map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
+map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
+map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
+map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
+map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets<cr>
+map <leader>gf :CommandTFlush<cr>\|:CommandT features<cr>
+map <leader>gg :topleft 100 :split Gemfile<cr>
+map <leader>gt :CommandTFlush<cr>\|:CommandTTag<cr>
+map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
+map <leader>F :CommandTFlush<cr>\|:CommandT %%<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " SWITCH BETWEEN TEST AND PRODUCTION CODE
@@ -429,13 +425,13 @@ map <leader>y "+yy
 map <leader>p "+p
 
 " NERDTree
-map <leader>f :NERDTreeToggle<CR>
+" map <leader>f :NERDTreeToggle<CR>
 
 " New name
 map <leader>n :call RenameFile()<cr>
 
 " Open from jumplist
-map <leader>j :CommandTJump<cr>
+" map <leader>j :CommandTJump<cr>
 
 " CommandT, space for buffer
 map <Space> :CommandTFlush<cr>\|:CommandTBuffer<cr>
@@ -447,13 +443,13 @@ map <C-@> :CommandTFlush<cr>\|:CommandT<cr>
 map <leader>s :setlocal spell!<cr>
 
 "Run command
-map <leader>a :VimuxPromptCommand<CR>
+" map <leader>a :VimuxPromptCommand<CR>
 
 "Run last command
-map <leader>r :VimuxRunLastCommand<CR>
+" map <leader>r :VimuxRunLastCommand<CR>
 
 " Interrupt any command running in the runner pane map
-map <leader>c :VimuxInterruptRunner<CR>
+" map <leader>c :VimuxInterruptRunner<CR>
 
 " Prevous buffer 
 map <leader>2 :b#<CR>
@@ -492,5 +488,11 @@ let g:gitgutter_diff_args = '-w'
 " More
 """"""""
 
+set notimeout
+set ttimeout
+
 "Remove highlighting for long lines (it is slow)
 set synmaxcol=80
+
+" bind control-h to hashrocket
+imap <C-h> <Space>=><Space>

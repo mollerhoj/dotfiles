@@ -8,7 +8,7 @@ zstyle ':vcs_info:*' stagedstr '%{\e[0;33m%}'
 zstyle ':vcs_info:*' unstagedstr '%{\e[0;31m%}'
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats "%{\e[0;32m%}%u%c%b%a%m%{\e[0m%}"
+zstyle ':vcs_info:*' formats "%{\e[0;32m%}%u%b%a%{\e[0m%}"
 
 # or use pre_cmd, see man zshcontrib
 vcs_info_wrapper() {
@@ -60,7 +60,9 @@ export ACK_COLOR_MATCH='red'
 
 # Paths
 export PATH=/Developer/NVIDIA/CUDA-5.0/bin:$PATH
-export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH="/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH" 
+# export DYLD_LIBRARY_PATH="/Library/PostgreSQL/9.2/lib:$DYLD_LIBRARY_PATH"
+
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/local/bin:$PATH"
@@ -68,6 +70,7 @@ export PATH="/opt/local/sbin:$PATH"
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:$HOME.rvm/gems/ruby-2.0.0-p247/bin"
 
 export PKG_CONFIG_PATH="/opt/ImageMagick/lib/pkgconfig/:$PKG_CONFIG_PATH"
 
@@ -80,7 +83,6 @@ alias vim='mvim -v'
 alias vi='mvim -v'
 
 # MANUAL READER: Browser
-export MANPAGER='col -b |bcat'
 
 # Correct character encodings, Very important for shell tools!
 export LANG=C
@@ -108,6 +110,8 @@ bindkey '^[[Z' backward-kill-word
 bindkey -M vicmd '?' history-incremental-pattern-search-backward
 bindkey -M vicmd '/' history-incremental-search-backward
 
+#
+alias del=rmtrash
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
