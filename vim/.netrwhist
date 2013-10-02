@@ -1,6 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/Users/mollerhoj3/work/rails_play/webshop/app/helpers'
-let g:netrw_dirhist_2='/Users/mem/dotfiles/.zsh'
-let g:netrw_dirhist_3='/Users/mem/work/2/webshop'
-let g:netrw_dirhist_4='/Users/mem/work/2/testapp/app/controllers'
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/Users/mem'
+let g:netrw_dirhist_2='/Users/mem/work/coffee/espresso/app/fighter'
+let g:netrw_dirhist_3='/Users/mem/work/coffee/espresso/app/fighter/ent'

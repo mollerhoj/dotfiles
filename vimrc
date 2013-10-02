@@ -28,7 +28,7 @@ set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
 set showtabline=2
-set winwidth=79
+set winwidth=50 "79
 " This makes RVM work inside Vim. I have no idea why.
 set shell=bash
 " keep more context when scrolling off the end of a buffer
@@ -492,7 +492,7 @@ set notimeout
 set ttimeout
 
 "Remove highlighting for long lines (it is slow)
-set synmaxcol=80
+set synmaxcol=140
 
 " bind control-h to hashrocket
 imap <C-h> <Space>=><Space>

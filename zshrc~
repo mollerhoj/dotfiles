@@ -60,8 +60,8 @@ export ACK_COLOR_MATCH='red'
 
 # Paths
 export PATH=/Developer/NVIDIA/CUDA-5.0/bin:$PATH
-export DYLD_LIBRARY_PATH="/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH"
-export DYLD_LIBRARY_PATH="/Library/PostgreSQL/9.2/lib/:$DYLD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH" 
+export DYLD_LIBRARY_PATH="/Library/PostgreSQL/9.2/lib:$DYLD_LIBRARY_PATH"
 
 
 export PATH="/usr/local/sbin:$PATH"
@@ -110,6 +110,8 @@ bindkey '^[[Z' backward-kill-word
 bindkey -M vicmd '?' history-incremental-pattern-search-backward
 bindkey -M vicmd '/' history-incremental-search-backward
 
+#
+alias del=rmtrash
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"

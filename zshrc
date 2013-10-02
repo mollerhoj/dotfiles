@@ -62,7 +62,7 @@ export ACK_COLOR_MATCH='red'
 export PATH=/Developer/NVIDIA/CUDA-5.0/bin:$PATH
 export DYLD_LIBRARY_PATH="/Developer/NVIDIA/CUDA-5.0/lib:$DYLD_LIBRARY_PATH" 
 # export DYLD_LIBRARY_PATH="/Library/PostgreSQL/9.2/lib:$DYLD_LIBRARY_PATH"
-
+alias serverinit='export DYLD_LIBRARY_PATH="/Library/PostgreSQL/9.2/lib:$DYLD_LIBRARY_PATH"'
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/opt/local/bin:$PATH"
@@ -73,7 +73,11 @@ export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:$HOME.rvm/gems/ruby-2.0.0-p247/bin"
 
 export PKG_CONFIG_PATH="/opt/ImageMagick/lib/pkgconfig/:$PKG_CONFIG_PATH"
+export NODE_PATH="/usr/local/lib/node"
 
+#Requirement for espresso:
+export PATH="/Users/mem/work/coffee/espresso/:$PATH"
+export ESPRESSO_PATH="/Users/mem/work/coffee/espresso/"
 
 # fixes rvm
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
