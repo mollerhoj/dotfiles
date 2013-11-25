@@ -4,7 +4,7 @@
 [core]
 	excludesfile = /Users/mollerhoj3/.gitignore
 [merge]
-	tool = vim
+	tool = vimdiff
 [credential]
 	helper = osxkeychain
 [alias]
