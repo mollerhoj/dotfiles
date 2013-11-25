@@ -94,7 +94,7 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable
 set background=dark
-colorscheme solarized
+"colorscheme solarized
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -120,7 +120,7 @@ endfunction
 call MapCR()
 " Close all other windows, open a vertical split, and open this file's test
 " alternate in it.
-"nnoremap <leader>s <c-w>o <c-w>v <c-w>w :call OpenTestAlternate()<cr>
+nnoremap <leader>s <c-w>o <c-w>v <c-w>w :call OpenTestAlternate()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
@@ -250,13 +250,13 @@ map <leader>gr :topleft :split config/routes.rb<cr>
 map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
 map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
 map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
+map <leader>gt :CommandTFlush<cr>\|:CommandT test<cr>
 map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
 map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
 map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
 map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets<cr>
 map <leader>gf :CommandTFlush<cr>\|:CommandT features<cr>
 map <leader>gg :topleft 100 :split Gemfile<cr>
-map <leader>gt :CommandTFlush<cr>\|:CommandTTag<cr>
 map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
 map <leader>F :CommandTFlush<cr>\|:CommandT %%<cr>
 
@@ -288,7 +288,7 @@ function! AlternateForCurrentFile()
   endif
   return new_file
 endfunction
-"nnoremap <leader>. :call OpenTestAlternate()<cr>
+nnoremap <leader>. :call OpenTestAlternate()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RUNNING TESTS
@@ -463,6 +463,8 @@ nnoremap <leader><leader> <c-^>
 let g:CommandTCancelMap = ['']
 let g:CommandTMatchWindowReverse=1
 
+set wildignore+=*.o,*.obj,*.png,*.lvl,*.svg,*.ttf,*jpg,*wav,*zip
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 "Vimux configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -487,7 +489,6 @@ let g:gitgutter_diff_args = '-w'
 """"""""""""
 " More
 """"""""
-
 set notimeout
 set ttimeout
 
