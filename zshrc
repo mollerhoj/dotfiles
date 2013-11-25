@@ -6,6 +6,7 @@ autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' stagedstr '%{\e[0;33m%}'
 zstyle ':vcs_info:*' unstagedstr '%{\e[0;31m%}'
+zstyle ':vcs_info:*' enable git
 
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' formats "%{\e[0;32m%}%u%b%a%{\e[0m%}"
@@ -32,6 +33,7 @@ PROMPT=$'$(vcs_info_wrapper) %{\e[0;32m%}%~ %{\e[0m%}'
 export TERM='xterm-color'
 alias ls='ls -G'
 alias ll='ls -lG'
+alias latexmk='latexmk -pvc -pdf -aux-directory=/usr/local/.latex_tmp'
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 export GREP_OPTIONS="--color"
 
@@ -69,15 +71,15 @@ export PATH="/opt/local/bin:$PATH"
 export PATH="/opt/local/sbin:$PATH"
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
-export PATH="$PATH:$HOME/.rvm/bin"
-export PATH="$PATH:$HOME.rvm/gems/ruby-2.0.0-p247/bin"
+export PATH="$HOME/.rvm/bin:$PATH"
+export PATH="$HOME.rvm/gems/ruby-1.9.3-p429/bin:$PATH"
+
 
 export PKG_CONFIG_PATH="/opt/ImageMagick/lib/pkgconfig/:$PKG_CONFIG_PATH"
 export NODE_PATH="/usr/local/lib/node"
 
 #Requirement for espresso:
-export PATH="/Users/mem/work/coffee/espresso/:$PATH"
-export ESPRESSO_PATH="/Users/mem/work/coffee/espresso/"
+export PATH=":$HOME/work/coffee/espresso/:$PATH"
 
 # fixes rvm
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
@@ -119,3 +121,10 @@ alias del=rmtrash
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+## git completion
+autoload -U compinit && compinit
+
+# Autocomplete for 'g' as well
+alias g='git'
+complete -o default -o nospace -F _git g
