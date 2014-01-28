@@ -497,3 +497,6 @@ set synmaxcol=140
 
 " bind control-h to hashrocket
 imap <C-h> <Space>=><Space>
+
+" eval clojure code
+map <CR> :%Eval<CR>
