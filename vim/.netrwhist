@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
 let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/Users/mem'
-let g:netrw_dirhist_2='/Users/mem/work/coffee/espresso/app/fighter'
-let g:netrw_dirhist_3='/Users/mem/work/coffee/espresso/app/fighter/ent'
+let g:netrw_dirhist_1='/Users/mollerhoj3/work/blechingberg/blechingberg/db/migrate'
+let g:netrw_dirhist_2='/Users/mollerhoj3/work/blechingberg/blechingberg/config'
+let g:netrw_dirhist_3='/Users/mollerhoj3/notes'

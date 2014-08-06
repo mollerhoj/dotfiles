@@ -1,0 +1,1 @@
+git ls-remote --get-url | sed 's/git@/http:\/\//g' | sed 's/com\:/com\//g'| xargs open

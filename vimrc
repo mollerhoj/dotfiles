@@ -1,6 +1,5 @@
 " Jens Dahl Mollerhojs .vimrc file
 " Mostly copied from Gary Bernhardt.
-" vim:set ts=2 sts=2 sw=2 expandtab:
 
 call pathogen#runtime_append_all_bundles()
 
@@ -44,6 +43,7 @@ set showcmd
 " Enable highlighting for syntax
 syntax on
 " Enable file type detection.
+set textwidth=0
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
 " Also load indent files, to automatically do language-dependent indenting.
@@ -72,8 +72,7 @@ augroup vimrcEx
     \ endif
 
   "for ruby, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
-  autocmd FileType python set sw=4 sts=4 et
+  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber,python set ai sw=2 sts=2 et
 
   autocmd! BufRead,BufNewFile *.sass setfiletype sass 
 
@@ -83,10 +82,9 @@ augroup vimrcEx
   " Don't syntax highlight markdown because it's often wrong
   autocmd! FileType mkd setlocal syn=off
 
-  " Leave the return key alone when in command line windows, since it's used
-  " to run commands there.
-  autocmd! CmdwinEnter * :unmap <cr>
-  autocmd! CmdwinLeave * :call MapCR()
+  "JENS
+  autocmd FileType text setlocal dict+=/usr/share/dict/words
+
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -94,7 +92,7 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable
 set background=dark
-"colorscheme solarized
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -103,22 +101,14 @@ set background=dark
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MISC KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
-" Insert a hash rocket with <c-l>
-imap <c-l> <space>=><space>
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
-" Clear the search buffer when hitting return
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>
-endfunction
-call MapCR()
-" Close all other windows, open a vertical split, and open this file's test
+" Close all other windows,k open a vertical split, and open this file's test
 " alternate in it.
 nnoremap <leader>s <c-w>o <c-w>v <c-w>w :call OpenTestAlternate()<cr>
 
@@ -146,13 +136,6 @@ map <Up> <Nop>
 map <Down> <Nop>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" OPEN FILES IN DIRECTORY OF CURRENT FILE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"cnoremap %% <C-R>=expand('%:h').'/'<cr>
-"map <leader>e :edit %%
-"map <leader>v :view %%
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! RenameFile()
@@ -177,88 +160,6 @@ function! PromoteToLet()
 endfunction
 :command! PromoteToLet :call PromoteToLet()
 ":map <leader>p :PromoteToLet<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" EXTRACT VARIABLE (SKETCHY)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! ExtractVariable()
-    let name = input("Variable name: ")
-    if name == ''
-        return
-    endif
-    " Enter visual mode (not sure why this is needed since we're already in
-    " visual mode anyway)
-    normal! gv
-
-    " Replace selected text with the variable name
-    exec "normal c" . name
-    " Define the variable on the line above
-    exec "normal! O" . name . " = "
-    " Paste the original selected text to be the variable value
-    normal! $p
-endfunction
-"vnoremap <leader>rv :call ExtractVariable()<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" INLINE VARIABLE (SKETCHY)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InlineVariable()
-    " Copy the variable under the cursor into the 'a' register
-    :let l:tmp_a = @a
-    :normal "ayiw
-    " Delete variable and equals sign
-    :normal 2daW
-    " Delete the expression into the 'b' register
-    :let l:tmp_b = @b
-    :normal "bd$
-    " Delete the remnants of the line
-    :normal dd
-    " Go to the end of the previous line so we can start our search for the
-    " usage of the variable to replace. Doing '0' instead of 'k$' doesn't
-    " work; I'm not sure why.
-    normal k$
-    " Find the next occurence of the variable
-    exec '/\<' . @a . '\>'
-    " Replace that occurence with the text we yanked
-    exec ':.s/\<' . @a . '\>/' . @b
-    :let @a = l:tmp_a
-    :let @b = l:tmp_b
-endfunction
-"nnoremap <leader>ri :call InlineVariable()<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! ShowRoutes()
-  " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
-  " Make sure Vim doesn't write __Routes__ as a file
-  :set buftype=nofile
-  " Delete everything
-  :normal 1GdG
-  " Put routes output in buffer
-  :0r! bundle exec rake -s routes
-  " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . "_ "
-  " Move cursor to bottom
-  :normal 1GG
-  " Delete empty trailing line
-  :normal dd
-endfunction
-map <leader>gR :call ShowRoutes()<cr>
-map <leader>gr :topleft :split config/routes.rb<cr>
-map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
-map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
-map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
-map <leader>gt :CommandTFlush<cr>\|:CommandT test<cr>
-map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
-map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
-map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
-map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets<cr>
-map <leader>gf :CommandTFlush<cr>\|:CommandT features<cr>
-map <leader>gg :topleft 100 :split Gemfile<cr>
-map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
-map <leader>F :CommandTFlush<cr>\|:CommandT %%<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " SWITCH BETWEEN TEST AND PRODUCTION CODE
@@ -375,7 +276,6 @@ command! OpenChangedFiles :call OpenChangedFiles()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Jens, my personal touch
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -399,22 +299,19 @@ silent execute '!mv ~/.vim-tmp/* ~/.vim-tmp-to-die/ 2>/dev/null'
 " Remove startup message
 set shortmess+=I
 
-
 "Good looking cursorline
 hi CursorLine term=bold ctermbg=236 cterm=bold guibg=Grey40
 
 " Remap VIM 0 to first non-blank character
 map 0 ^
 
-" Wrapping lines a treated a breaking lines
+" Wrapping lines are treated as breaking lines
 map j gj
 map k gk
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader keys
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" t = CommandT
 
 " set clipboard=unnamedplus
 " nnoremap yy yy"+yy
@@ -433,11 +330,9 @@ map <leader>n :call RenameFile()<cr>
 " Open from jumplist
 " map <leader>j :CommandTJump<cr>
 
-" CommandT, space for buffer
-map <Space> :CommandTFlush<cr>\|:CommandTBuffer<cr>
-
-" CommandT, c-space for whole project
-map <C-@> :CommandTFlush<cr>\|:CommandT<cr>
+" CtrlP
+"map <Space> :CtrlPBuffer<cr>
+"nmap <C-@> :CtrlP<cr>
 
 " Toggle spell checking
 map <leader>s :setlocal spell!<cr>
@@ -463,7 +358,25 @@ nnoremap <leader><leader> <c-^>
 let g:CommandTCancelMap = ['']
 let g:CommandTMatchWindowReverse=1
 
-set wildignore+=*.o,*.obj,*.png,*.lvl,*.svg,*.ttf,*jpg,*wav,*zip
+" CommandT, space for buffer
+map <Space> :CommandTFlush<cr>\|:CommandTBuffer<cr>
+
+set wildignore+=*.o,*.obj,*.png,*.lvl,*.svg,*.ttf,*jpg,*wav,*zip,*.mp3,public/**,tmp/**,log/**
+
+map <leader>gR :call ShowRoutes()<cr>
+map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
+map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
+map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
+map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
+map <leader>ga :CommandTFlush<cr>\|:CommandT app/assets<cr>
+map <leader>gj :CommandTFlush<cr>\|:CommandT app/assets/javascripts<cr>
+map <leader>gs :CommandTFlush<cr>\|:CommandT spec<cr>
+map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
+map <leader>gt :CommandTFlush<cr>\|:CommandTTag<cr>
+map <leader>gg :topleft 100 :split Gemfile<cr>
+map <leader>gS :topleft 100 :split db/structure.sql<cr>
+map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
+map <leader>F :CommandTFlush<cr>\|:CommandT %%<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 "Vimux configuration
@@ -474,18 +387,6 @@ set wildignore+=*.o,*.obj,*.png,*.lvl,*.svg,*.ttf,*jpg,*wav,*zip
 " Use nearest pane
 "let VimuxUseNearestPane = 1
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Git Gutter Config
-"""""""""""""""""""""""""""""""""""""""""""""""""
-"Remove flickering, duh
-let g:gitgutter_sign_column_always = 1
-"Hide signs
-let g:gitgutter_signs = 1
-" Enable line highlighting
-let g:gitgutter_highlight_lines = 0
-" Ignore whitespace
-let g:gitgutter_diff_args = '-w'
-
 """"""""""""
 " More
 """"""""
@@ -495,8 +396,140 @@ set ttimeout
 "Remove highlighting for long lines (it is slow)
 set synmaxcol=140
 
-" bind control-h to hashrocket
-imap <C-h> <Space>=><Space>
-
 " eval clojure code
-map <CR> :%Eval<CR>
+" map <C-CR> :%Eval<CR>
+
+"Python check syntax
+set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
+set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+
+" Execute a selection of code (very cool!)
+" Use VISUAL to select a range and then hit ctrl-h to execute it.
+python << EOL
+def EvaluateCurrentRange():
+    eval(compile('\n'.join(vim.current.range),'','exec'),globals())
+EOL
+
+vmap <CR> :py EvaluateCurrentRange()<CR>
+
+"line width color test
+if exists('+colorcolumn')
+  set colorcolumn=80
+else
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+
+"include library in tab-completion.
+set complete=.,w,b,u,t,i,k
+
+"Danish characters
+let g:danish = 0
+function! DanishModeToggle()
+  if g:danish
+    let g:danish = 0
+    imap a a
+    imap o o
+    imap ' '
+    imap A A
+    imap O O
+    imap " "
+  else
+    let g:danish = 1
+    imap a å
+    imap o ø
+    imap ' æ
+    imap A Å
+    imap O Ø
+    imap " Æ
+  endif
+endfunction
+
+nnoremap <leader>d :call DanishModeToggle()<cr>
+
+"disable caching in CtrlPA 
+"let g:ctrlp_use_caching = 0
+"always open files in new buffers
+"let g:ctrlp_switch_buffer = 0
+"Ctrlp use current shell's directory, not current file's directory
+let g:ctrlp_working_path_mode = 0
+"use ag for speed
+"let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g ""'
+
+":W means :w
+cnoreabbrev <expr> W ((getcmdtype() is# ':' && getcmdline() is# 'W')?('w'):('W'))
+
+"TEST: text wrap.
+"Annoying for anything but .txt files....
+":set formatoptions+=aw
+
+"TEST: CtrlP deletes buffers on command
+"let g:ctrlp_buffer_func = { 'enter': 'MyCtrlPMappings' }
+
+func! MyCtrlPMappings()
+    nnoremap <buffer> <silent> <c-@> :call <sid>DeleteBuffer()<cr>
+endfunc
+
+func! s:DeleteBuffer()
+    let line = getline('.')
+    let bufid = line =~ '\[\d\+\*No Name\]$' ? str2nr(matchstr(line, '\d\+'))
+        \ : fnamemodify(line[2:], ':p')
+    exec "bd" bufid
+    exec "norm \<F5>"
+endfunc
+
+command! SudoW w !sudo tee % > /dev/null
+
+"Ack
+map <Leader>C :Ack! <cword><CR>
+
+"Use Ag instead of Ack
+let g:ackprg = 'ag --nogroup --nocolor --column'
+
+"Do not use the same terminal session as vim to run system commands: (for Ack)
+"set t_ti= t_te=
+"set shellpipe=2>&1>
+
+"Remove the file with command:
+" function! Remove()
+"   call delete(expand('%')) | bdelete!
+" endfunction
+
+nnoremap <leader>d :call DanishModeToggle()<cr>
+
+"Don't jump to start of the line when switching buffers
+set nostartofline
+
+"Translate to russian
+let g:langpair="ru" 
+
+"Visual translate with (mark and press T)
+let g:vtranslate="T" 
+
+
+"Unmap annoying shift K
+map <S-K> <Nop>
+
+"haskell (must be run 'after')
+"hi link hsNiceOperator Operator
+"hi! link Conceal Operator
+"setlocal conceallevel=2
+"syntax match hsNiceOperator "\\" conceal cchar=λ
+
+"cscope load cscope.out file
+if has("cscope")
+  " add any database in current directory
+  if filereadable("cscope.out")
+      cs add cscope.out
+  endif
+endif
+
+"cscope find all uses of a function
+set cscopequickfix=s-,c-,d-,i-,t-,e-
+
+function! FindAllCallsTo( arg )
+    execute 'cscope find c ' . a:arg
+    execute 'cope'
+endfunction 
+
+command! -nargs=1 CallsTo call FindAllCallsTo( '<args>' )
+

@@ -1,25 +1,5 @@
-# Copyright 2010-2013 Wincent Colaiuta. All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#
-# 1. Redistributions of source code must retain the above copyright notice,
-#    this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#    this list of conditions and the following disclaimer in the documentation
-#    and/or other materials provided with the distribution.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
+# Copyright 2010-2014 Greg Hurrell. All rights reserved.
+# Licensed under the terms of the BSD 2-clause license.
 
 require 'ostruct'
 require 'command-t/settings'
@@ -40,24 +20,24 @@ module CommandT
       @reverse_list    = options[:match_window_reverse]
 
       # save existing window dimensions so we can restore them later
-      @windows = []
-      (0..(::VIM::Window.count - 1)).each do |i|
-        @windows << OpenStruct.new(:index   => i,
-                                   :height  => ::VIM::Window[i].height,
-                                   :width   => ::VIM::Window[i].width)
+      @windows = (0..(::VIM::Window.count - 1)).map do |i|
+        OpenStruct.new(
+          :index  => i,
+          :height => ::VIM::Window[i].height,
+          :width  => ::VIM::Window[i].width
+        )
       end
 
-      # global settings (must manually save and restore)
-      @settings = Settings.new
-      ::VIM::set_option 'timeout'         # ensure mappings timeout
-      ::VIM::set_option 'timeoutlen=0'    # respond immediately to mappings
-      ::VIM::set_option 'nohlsearch'      # don't highlight search strings
-      ::VIM::set_option 'noinsertmode'    # don't make Insert mode the default
-      ::VIM::set_option 'noshowcmd'       # don't show command info on last line
-      ::VIM::set_option 'report=9999'     # don't show "X lines changed" reports
-      ::VIM::set_option 'sidescroll=0'    # don't sidescroll in jumps
-      ::VIM::set_option 'sidescrolloff=0' # don't sidescroll automatically
-      ::VIM::set_option 'noequalalways'   # don't auto-balance window sizes
+      set 'timeout', true        # ensure mappings timeout
+      set 'hlsearch', false      # don't highlight search strings
+      set 'insertmode', false    # don't make Insert mode the default
+      set 'showcmd', false       # don't show command info on last line
+      set 'equalalways', false   # don't auto-balance window sizes
+      set 'timeoutlen', 0        # respond immediately to mappings
+      set 'report', 9999         # don't show "X lines changed" reports
+      set 'sidescroll', 0        # don't sidescroll in jumps
+      set 'sidescrolloff', 0     # don't sidescroll automatically
+      set 'updatetime', options[:debounce_interval]
 
       # show match window
       split_location = options[:match_window_at_top] ? 'topleft' : 'botright'
@@ -66,29 +46,26 @@ module CommandT
         raise "Can't re-open GoToFile buffer" unless $curbuf.number == @@buffer.number
         $curwin.height = 1
       else        # creating match window for first time and set it up
-        split_command = "silent! #{split_location} 1split GoToFile"
-        [
-          split_command,
-          'setlocal bufhidden=unload',  # unload buf when no longer displayed
-          'setlocal buftype=nofile',    # buffer is not related to any file
-          'setlocal nomodifiable',      # prevent manual edits
-          'setlocal noswapfile',        # don't create a swapfile
-          'setlocal nowrap',            # don't soft-wrap
-          'setlocal nonumber',          # don't show line numbers
-          'setlocal nolist',            # don't use List mode (visible tabs etc)
-          'setlocal foldcolumn=0',      # don't show a fold column at side
-          'setlocal foldlevel=99',      # don't fold anything
-          'setlocal nocursorline',      # don't highlight line cursor is on
-          'setlocal nospell',           # spell-checking off
-          'setlocal nobuflisted',       # don't show up in the buffer list
-          'setlocal textwidth=0'        # don't hard-wrap (break long lines)
-        ].each { |command| ::VIM::command command }
+        ::VIM::command "silent! #{split_location} 1split GoToFile"
+        set 'bufhidden', 'unload' # unload buf when no longer displayed
+        set 'buftype', 'nofile'   # buffer is not related to any file
+        set 'modifiable', false   # prevent manual edits
+        set 'swapfile', false     # don't create a swapfile
+        set 'wrap', false         # don't soft-wrap
+        set 'number', false       # don't show line numbers
+        set 'list', false         # don't use List mode (visible tabs etc)
+        set 'foldcolumn', 0       # don't show a fold column at side
+        set 'foldlevel', 99       # don't fold anything
+        set 'cursorline', false   # don't highlight line cursor is on
+        set 'spell', false        # spell-checking off
+        set 'buflisted', false    # don't show up in the buffer list
+        set 'textwidth', 0        # don't hard-wrap (break long lines)
 
         # don't show the color column
-        ::VIM::command 'setlocal colorcolumn=0' if VIM::exists?('+colorcolumn')
+        set 'colorcolumn', 0 if VIM::exists?('+colorcolumn')
 
         # don't show relative line numbers
-        ::VIM::command 'setlocal norelativenumber' if VIM::exists?('+relativenumber')
+        set 'relativenumber', false if VIM::exists?('+relativenumber')
 
         # sanity check: make sure the buffer really was created
         raise "Can't find GoToFile buffer" unless $curbuf.name.match /GoToFile\z/
@@ -100,11 +77,11 @@ module CommandT
         ::VIM::command "syntax match CommandTSelection \"^#{SELECTION_MARKER}.\\+$\""
         ::VIM::command 'syntax match CommandTNoEntries "^-- NO MATCHES --$"'
         ::VIM::command 'syntax match CommandTNoEntries "^-- NO SUCH FILE OR DIRECTORY --$"'
-        ::VIM::command 'setlocal synmaxcol=9999'
+        set 'synmaxcol', 9999
 
         if VIM::has_conceal?
-          ::VIM::command 'setlocal conceallevel=2'
-          ::VIM::command 'setlocal concealcursor=nvic'
+          set 'conceallevel', 2
+          set 'concealcursor', 'nvic'
           ::VIM::command 'syntax region CommandTCharMatched ' \
                          "matchgroup=CommandTCharMatched start=+#{MH_START}+ " \
                          "matchgroup=CommandTCharMatchedEnd end=+#{MH_END}+ concealends"
@@ -115,7 +92,6 @@ module CommandT
 
         ::VIM::command "highlight link CommandTSelection #{@highlight_color}"
         ::VIM::command 'highlight link CommandTNoEntries Error'
-        ::VIM::evaluate 'clearmatches()'
 
         # hide cursor
         @cursor_highlight = get_cursor_highlight
@@ -265,6 +241,11 @@ module CommandT
     end
 
   private
+
+    def set(setting, value)
+      @settings ||= Settings.new
+      @settings.set(setting, value)
+    end
 
     def move_cursor_to_selected_line
       # on some non-GUI terminals, the cursor doesn't hide properly
@@ -436,11 +417,11 @@ module CommandT
     end
 
     def lock
-      ::VIM::command 'setlocal nomodifiable'
+      set 'modifiable', false
     end
 
     def unlock
-      ::VIM::command 'setlocal modifiable'
+      set 'modifiable', true
     end
   end
 end
