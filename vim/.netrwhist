@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
 let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/Users/mollerhoj3/work/blechingberg/blechingberg/db/migrate'
-let g:netrw_dirhist_2='/Users/mollerhoj3/work/blechingberg/blechingberg/config'
-let g:netrw_dirhist_3='/Users/mollerhoj3/notes'
+let g:netrw_dirhist_1='/Users/mollerhoj/ku/ap'
+let g:netrw_dirhist_2='/Users/mollerhoj/ku/ap/mini_ruby'
+let g:netrw_dirhist_3='/Users/mollerhoj/work/react-fancypixel-tutorial/small-frontend/scripts/components/products'

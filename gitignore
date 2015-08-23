@@ -1,2 +1,5 @@
-.DS_Store
 tags
+cscope.out
+.rake_tasks
+.beam
+.DS_Store
