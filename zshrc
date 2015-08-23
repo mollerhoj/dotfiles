@@ -14,10 +14,10 @@ zstyle ':vcs_info:*' formats "%{\e[4;32m%}%u%b%a%{\e[0m%}"
 vcs_info_wrapper() {
   vcs_info
   if [ -n "$vcs_info_msg_0_" ]; then
-    echo "%{$fg[grey]%}${vcs_info_msg_0_}%{$reset_color%}$del"
+    echo "%{$fg[grey]%}${vcs_info_msg_0_}%{$reset_color%}$del "
   fi
 }
-PROMPT=$'%{\033[5;43;37m%}>%{\033[0m%} $(vcs_info_wrapper) %{\e[4;32m%}%~ %{\e[0m%}'
+PROMPT=$'%{\033[5;43;37m%}>%{\033[0m%} $(vcs_info_wrapper)%{\e[4;32m%}%~ %{\e[0m%}'
 
 
 # Nicer history
