@@ -14,6 +14,10 @@
 
 
 " Todo:
+" Unite.vim is caching used? Do I have newest version? Exclude .gif files?
+" git diff master: show line numbers - perhaps make a view to unite?
+" visual jump to line
+" terminal use of ctrl-move does not work
 " Get this under source control
 " Avoid swapfile message (in progress)
 " -----------------------------------------------------------------------------
@@ -246,8 +250,6 @@ function! s:unite_settings()
   au! InsertLeave <buffer> let b:actually_quit = 1
   au! CursorHold  <buffer> if exists('b:actually_quit') && b:actually_quit | close | endif 
 endfunction"
-
-let g:unite_source_rec_async_command = 'ag --follow --nocolor --nogroup --hidden -g ""'
 
 " Use ag for grepping
 let g:unite_source_grep_command = 'ag'

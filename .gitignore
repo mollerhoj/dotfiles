@@ -1,3 +1,5 @@
 vim-tmp-to-die/
 vim-tmp/
 vim/.netrwhist
+nvim/undo/
+nvim/swap/
