@@ -2,7 +2,7 @@
 	name = mollerhoj
 	email = mollerhoj3@gmail.com
 [core]
-	excludesfile = /Users/mollerhoj/.gitignore
+	excludesfile = ~/.gitignore
 	editor = /usr/bin/vim
 	autocrlf = false
 [merge]

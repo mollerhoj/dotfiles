@@ -1,6 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/Users/mollerhoj/work/beer_system/beertime'
-let g:netrw_dirhist_2='/Users/mollerhoj/work/beer_system/beertime/app'
-let g:netrw_dirhist_3='/Users/mollerhoj/work/beer_system/beertime/app/models'
-let g:netrw_dirhist_4='/Users/mollerhoj/.nvim/plugged/YouCompleteMe'

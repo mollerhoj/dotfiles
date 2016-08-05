@@ -3,12 +3,14 @@ export TERM=xterm-256color
 setopt prompt_subst
 autoload -Uz vcs_info
 
-zstyle ':vcs_info:*' stagedstr '%{\e[4;33m%}'
-zstyle ':vcs_info:*' unstagedstr '%{\e[4;31m%}'
+zstyle ':vcs_info:*' stagedstr '%{\e[4;33m%}' #yellow
+zstyle ':vcs_info:*' unstagedstr '%{\e[4;31m%}' #red
 zstyle ':vcs_info:*' enable git
 
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats "%{\e[4;32m%}%u%b%a%{\e[0m%}"
+
+#%b: bold, %u: underline, %c: hook_com[staged], defined below.
+zstyle ':vcs_info:*' formats "%{\e[4;32m%}%c%u%b%a%{\e[0m%}" 
 
 # or use pre_cmd, see man zshcontrib
 vcs_info_wrapper() {
@@ -19,6 +21,20 @@ vcs_info_wrapper() {
 }
 PROMPT=$'%{\033[5;43;37m%}>%{\033[0m%} $(vcs_info_wrapper)%{\e[4;32m%}%~ %{\e[0m%}'
 
+### git: Show yellow marker if there are untracked files in repository
+# Make sure you have added staged to your 'formats':  %c
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep '??' &> /dev/null ; then
+        # This will show the marker if there are any untracked files in repo.
+        # If instead you want to show the marker only if there are untracked
+        # files in $PWD, use:
+        #[[ -n $(git ls-files --others --exclude-standard) ]] ; then
+        hook_com[staged]+='%{\e[4;33m%}' # The code for yellow
+    fi
+}
 
 # Nicer history
 export HISTSIZE=100000
@@ -72,8 +88,6 @@ export NODE_PATH="/usr/local/lib/node"
 alias vim='mvim -v'
 alias vi='mvim -v'
 
-# MANUAL READER: Browser
-
 # Correct character encodings, Very important for shell tools!
 export LANG=C
 export LC_TYPE=C
@@ -100,9 +114,6 @@ bindkey '^[[Z' backward-kill-word
 bindkey -M vicmd '?' history-incremental-pattern-search-backward
 bindkey -M vicmd '/' history-incremental-search-backward
 
-#
-alias del=rmtrash
-
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
@@ -123,7 +134,7 @@ alias gitopen="git ls-remote --get-url | sed 's/git@/http:\/\//g' | sed 's/com\:
 alias c="./run"
 alias mv="mv -i"
 alias cp="cp -i"
-alias rm="trash"
+#alias rm="trash"
 alias z="zeus"
 
 #git merge conflicts: Jacobs way
@@ -135,7 +146,7 @@ function editconflicts() {
 alias gitbranchclean='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
 # Rake completion
-source $HOME/.rake_completion.zsh
+# source $HOME/.rake_completion.zsh
 
 # Java, classpath
 
@@ -144,12 +155,14 @@ export CLASSPATH="$HOME/bin/hamcrest-core-1.3.jar:$CLASSPATH"
 export CLASSPATH="$HOME/ku/sis:$CLASSPATH"
 
 # Add rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# export PATH="$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
 
 # Need ulimitted file edit permissions for `browserify`. See:
 # https://github.com/jsdf/coffee-reactify/issues/3
 ulimit -n 2560
+
+
 ###-begin-npm-completion-###
 #
 # npm command completion script
@@ -203,3 +216,8 @@ elif type compctl &>/dev/null; then
   compctl -K _npm_completion npm
 fi
 ###-end-npm-completion-###
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+## We need to use brews version of python, not the system version.
+export PATH=/usr/local/bin:/usr/local/share/python:$PATH
