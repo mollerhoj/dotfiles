@@ -1,5 +1,9 @@
+# Number of scrollback lines is controlled in terminal emulator
+# Colors are controlled in terminal emulator
+
 export TERM=xterm-256color
 
+# Prompt customization
 setopt prompt_subst
 autoload -Uz vcs_info
 
@@ -36,10 +40,16 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
     fi
 }
 
-# Nicer history
-export HISTSIZE=100000
-export HISTFILE="$HOME/.history"
+# Remember a lot of command history
+export HISTSIZE=1000000
 export SAVEHIST=$HISTSIZE
+
+# Save command history here
+export HISTFILE="$HOME/.history"
+
+# Share command history between shells
+setopt inc_append_history
+setopt share_history
 
 # Use vim as the editor
 export EDITOR=vi
@@ -140,7 +150,7 @@ alias z="zeus"
 #git merge conflicts: Jacobs way
 #Use :n to move to next conflict
 function editconflicts() { 
-  vim +/"<<<<<<<" $( git diff --name-only --diff-filter=U | xargs )
+  nvim +/"<<<<<<<" $( git diff --name-only --diff-filter=U | xargs )
 }
 
 alias gitbranchclean='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
@@ -221,3 +231,8 @@ eval "$(rbenv init -)"
 
 ## We need to use brews version of python, not the system version.
 export PATH=/usr/local/bin:/usr/local/share/python:$PATH
+
+##CUDA, for tensorflow GPU support
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64"
+export CUDA_HOME=/usr/local/cuda
+export DYLD_LIBRARY_PATH="/usr/local/cuda/lib":$DYLD_LIBRARY_PATH

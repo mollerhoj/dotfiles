@@ -1,0 +1,18 @@
+--ignore-dir=coverage
+
+# Ruby
+--type-add=css=scss
+--type-add=ruby=.haml,.rselm,.feature,.ru,.lock
+--type-set=coffeescript=.coffee
+--type-set=coffee=.coffee
+
+# Don't search generated files
+--ignore-file=ext:log
+--ignore-file=is:.tags
+--ignore-file=is:tags
+
+# Don't search tmp folders
+--ignore-dir=tmp
+
+# Don't search git time management
+--ignore-dir=gtm

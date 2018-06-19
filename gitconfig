@@ -12,17 +12,15 @@
 [alias]
   lg = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   open = "!~/dotfiles/gitopen"
-  lol = "!git --no-pager log --graph --decorate --pretty=oneline --abbrev-commit --all --max-count=20"
+  lol = "!git --no-pager log --graph --decorate --pretty=oneline --abbrev-commit --max-count=20"
   lols = "!git --no-pager log --graph --decorate --pretty=oneline --abbrev-commit master.."
   lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
   loldiff = log --graph --decorate --pretty=oneline --abbrev-commit HEAD ^master
-  df = diff HEAD master
+  df = diff HEAD master --name-only
   ls = ls-files
   br = branch
   ci = commit --verbose
   co = checkout
-  ign = ls-files -o -i --exclude-standard
-	wip = !git add -A && git commit -m "WIP"
 [color]
   ui = auto
 [color "branch"]
@@ -45,9 +43,10 @@
 [pull]
 	rebase = true
 [filter "lfs"]
-	clean = git lfs clean %f
-	smudge = git lfs smudge %f
+	process = git-lfs filter-process
 	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
