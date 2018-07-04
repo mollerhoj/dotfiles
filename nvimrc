@@ -23,6 +23,9 @@
 " - General
 " -----------------------------------------------------------------------------
 
+" Path to python for neovim to use
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 " experimental and potentially plugin breaking
 map Q <Nop>
 
@@ -195,6 +198,8 @@ Plug 'chiedo/vim-case-convert'
 
 Plug 'tweekmonster/django-plus.vim' "makes htmldjango filetype be recognized
 Plug 'posva/vim-vue' "syntax highlighting for .vue files
+
+Plug 'ludovicchabant/vim-gutentags' "Manage ctags
 
 call plug#end()
 " -----------------------------------------------------------------------------
