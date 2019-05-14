@@ -5,6 +5,7 @@
 	excludesfile = ~/.gitignore
 	editor = /usr/bin/vim
 	autocrlf = false
+	attributesfile = /Users/mollerhoj/.gitattributes
 [merge]
 	tool = vimdiff
 [credential]

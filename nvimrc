@@ -154,6 +154,9 @@ set colorcolumn=80
 " Make the line to the right a nice color.
 hi ColorColumn ctermbg=black
 
+"Folded line background color black
+hi Folded ctermbg=Black
+
 " No matter the theme, neovim will always be black
 " hi Normal ctermbg=16 " experimental
 
@@ -188,9 +191,6 @@ Plug 'StanAngeloff/php.vim'
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } "experimental
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'git-time-metric/gtm-vim-plugin' "experimental
-
-Plug 'janko-m/vim-test' "experimental (Should remove)
 
 Plug 'w0rp/ale'
 
@@ -200,6 +200,8 @@ Plug 'tweekmonster/django-plus.vim' "makes htmldjango filetype be recognized
 Plug 'posva/vim-vue' "syntax highlighting for .vue files
 
 Plug 'ludovicchabant/vim-gutentags' "Manage ctags
+
+Plug 'tmhedberg/SimpylFold' "testing
 
 call plug#end()
 " -----------------------------------------------------------------------------
@@ -221,7 +223,8 @@ let g:rspec_command = ":!bin/rspec {spec}"
 nmap <space> :NERDTreeToggle<CR>
 
 " use ctrl-space to show current file in NERDTree
-nmap <Nul> :NERDTreeFind<CR>
+let g:CtrlSpaceDefaultMappingKey = "<C-space> "
+nmap <C-space> :NERDTreeFind<CR>
 
 " Use a width of 50 by default
 let NERDTreeWinSize = 50
@@ -441,13 +444,6 @@ if exists('g:plugs["tern_for_vim"]')
   autocmd FileType javascript setlocal omnifunc=tern#Complete
 endif
 
-""""""""
-" VimTest
-""""""""
-
-" make test commands execute using dispatch.vim
-let test#strategy = "neovim"
-
 """"""""""
 " Command to copy file path and line
 """"""""""
@@ -465,6 +461,10 @@ let g:ale_html_htmlhint_options = '--format=unix --config .htmlhintrc'
 let g:ale_echo_msg_format = '%code: %%s [%linter%]'
 
 highlight ALEWarning ctermbg=DarkGray
+highlight ALEError ctermbg=DarkGray
+highlight ALEStyleWarning ctermbg=DarkGray
+highlight ALEStyleError ctermbg=DarkGray
+highlight ALEInfo ctermbg=DarkGray
 
 " let g:ale_html_tidy_args = '-q -e -language e -config .tidyrc'
 " let g:ale_linters = { 'eruby': ['htmlhint', 'tidy'], 'html': ['tidy'] }
@@ -473,3 +473,24 @@ highlight ALEWarning ctermbg=DarkGray
 " Python 
 let g:ale_linters = {'python': ['flake8']}
 let g:ale_fixers = {'python': ['remove_trailing_lines', 'trim_whitespace', 'autopep8']}
+
+
+"""""
+" TEST!!!
+"""""
+
+" replace currently selected text with default register
+" without yanking it
+vnoremap <leader>p "_dP
+
+" Show white space characters
+set list
+
+" Set folding to be based on intentation only
+set foldmethod=indent
+set foldlevelstart=20
+
+" Clear highlighting on Escape
+nnoremap <esc> :noh<return><esc>
+
+
