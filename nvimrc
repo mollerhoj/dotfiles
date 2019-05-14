@@ -73,7 +73,7 @@ cnoremap <C-f> <Right>
 cnoremap <M-b> <S-Left>
 cnoremap <M-f> <S-Right>
 
-" Save backup files in one directory (untested)
+" Save backup files in one directory
 set backupdir=~/.config/nvim/backup//
 
 " Save swap files in one directory (untested)
@@ -492,5 +492,3 @@ set foldlevelstart=20
 
 " Clear highlighting on Escape
 nnoremap <esc> :noh<return><esc>
-
-
