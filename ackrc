@@ -1,4 +1,7 @@
+# Rails
 --ignore-dir=coverage
+--ignore-dir=vendor
+--ignore-dir=public
 
 # Ruby
 --type-add=css=scss
@@ -16,3 +19,9 @@
 
 # Don't search git time management
 --ignore-dir=gtm
+
+# Don't search byebug history
+--ignore-file=is:.byebug_history
+
+# Don't search vcr files
+--ignore-dir=spec/vcr

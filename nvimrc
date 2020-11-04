@@ -148,6 +148,11 @@ au BufNewFile,BufRead *.es6 set filetype=javascript
 " - Visuals
 " -----------------------------------------------------------------------------
 
+" Use 256 colors if terminal supports it
+if $TERM == "xterm-256color"
+  set t_Co=256
+endif
+
 " Show the line to the right.
 set colorcolumn=80
 
@@ -170,6 +175,7 @@ Plug 'Shougo/neomru.vim'
 Plug 'Shougo/vimproc'
 Plug 'Shougo/unite.vim'
 Plug 'thoughtbot/vim-rspec'
+Plug 'tpope/vim-projectionist' " experimental
 Plug 'vim-ruby/vim-ruby' "Better ctags integration
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-bundler'
@@ -188,11 +194,11 @@ Plug 'kchmck/vim-coffee-script' "experimental
 Plug 'othree/yajs.vim' "experimental
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'StanAngeloff/php.vim'
+Plug 'mollerhoj/vim-spectator'
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } "experimental
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'dhruvasagar/vim-table-mode' "experimental
 
-Plug 'w0rp/ale'
+" Plug 'dense-analysis/ale'
 
 Plug 'chiedo/vim-case-convert'
 
@@ -201,7 +207,18 @@ Plug 'posva/vim-vue' "syntax highlighting for .vue files
 
 Plug 'ludovicchabant/vim-gutentags' "Manage ctags
 
-Plug 'tmhedberg/SimpylFold' "testing
+Plug 'tpope/vim-surround' "testing
+
+Plug 'udalov/kotlin-vim'
+
+" Typescript """"""""""""""""""""""""""""
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+" For Denite features
+Plug 'Shougo/denite.nvim'
+
+" Enable deoplete at startup
+let g:deoplete#enable_at_startup = 1
 
 call plug#end()
 " -----------------------------------------------------------------------------
@@ -247,7 +264,7 @@ let g:unite_source_history_yank_enable = 1
 nmap <leader>y :<C-u>Unite history/yank<cr>
 
 " browse current directory
-nmap <leader>f :<c-u>Unite file_rec/async:.<cr>
+" nmap <leader>f :<c-u>Unite file_rec/async:.<cr> (Replaced by fzf)
 
 " Browse rails controllers
 nmap <leader>gc :<C-u>Unite file_rec/async:app/controllers<cr>
@@ -319,9 +336,8 @@ nnoremap <F5> :MundoToggle<CR>
 let g:gitgutter_realtime = 0 " Typing stops
 " let g:gitgutter_eager = 0 " Buffer switch
 
-" Diff between this commit and master branch, to show changes from multiple
-" commits. (experimental)
-let g:gitgutter_diff_args = 'master'
+" Diff between this commit and master branch
+let g:gitgutter_diff_base = 'master'
 
 """"""""""""""""""""""""""""""""""""
 " Tagbar
@@ -415,6 +431,14 @@ command! Efactories edit spec/factories.rb
 autocmd FileType fzf tnoremap <buffer> <C-j> <Down>
 autocmd FileType fzf tnoremap <buffer> <C-k> <Up>
 
+nmap <leader>f :<c-u>FZF<cr>
+
+command! -nargs=1 Gitdiff call fzf#run({'source': 'gitdiff ' . string(<q-args>), 'sink': 'e', 'right': '50%'})
+
+nmap <leader>q :Gitdiff master<cr>
+
+
+
 """""""""""""
 " Deocomplete
 """""""""""""
@@ -476,19 +500,31 @@ let g:ale_fixers = {'python': ['remove_trailing_lines', 'trim_whitespace', 'auto
 
 
 """""
-" TEST!!!
+" Utils
 """""
-
-" replace currently selected text with default register
-" without yanking it
-vnoremap <leader>p "_dP
 
 " Show white space characters
 set list
 
-" Set folding to be based on intentation only
-set foldmethod=indent
-set foldlevelstart=20
-
 " Clear highlighting on Escape
 nnoremap <esc> :noh<return><esc>
+
+" Format XML files
+command! XmlLint :%!xmllint --format %
+
+"""""
+" TEST!!!
+"""""
+set foldmethod=expr
+set foldlevelstart=20
+autocmd FileType ruby,eruby,python set foldexpr=getline(v:lnum)=~'^\\s*#'
+autocmd FileType javascript set foldexpr=getline(v:lnum)=~'^\\s*/'
+
+" Toggle folding with F2
+map <expr> z &foldlevel ? 'zM' :'zR'
+
+set fileformats=unix
+
+" Paste in visual mode without yanking
+xnoremap <silent> p p:let @+=@0<CR>
+

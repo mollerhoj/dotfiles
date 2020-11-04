@@ -10,3 +10,4 @@ ln -s -f ~/dotfiles/gitconfig ~/.gitconfig
 ln -s -f ~/dotfiles/tmux.conf ~/.tmux.conf
 ln -s -f ~/dotfiles/nvimrc ~/.nvimrc
 ln -s -f ~/dotfiles/nvimrc ~/.config/nvim/init.vim
+ln -s -f ~/dotfiles/overmind.env ~/.overmind.env

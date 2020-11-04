@@ -22,6 +22,7 @@
   br = branch
   ci = commit --verbose
   co = checkout
+  wdiff = diff --color-words="[^[:space:],]+"
 [color]
   ui = auto
 [color "branch"]
